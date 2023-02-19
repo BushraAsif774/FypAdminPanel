@@ -1,0 +1,43 @@
+.new {
+    width: 100%;
+    display: flex;
+  
+    .newContainer {
+      flex: 6;
+
+      .top
+       {
+        -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+        box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+        
+        margin: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+       margin-right: auto !important;
+       margin-left: auto!important;
+        width: 50%;
+        border: 1px solid purple;
+    padding: 2rem !important;
+    }
+    .inputstyle{
+        -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
+        box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
+        color: #6439ff
+    }
+    .inputstyle::placeholder{
+        color: #6439ff
+
+    }
+    label{
+        color: lightgrey;
+       
+    }
+   
+    .css-2y464i-MuiInputBase-root-MuiFilledInput-root{
+        color: #6439ff;
+       
+
+    }
+}
+}
