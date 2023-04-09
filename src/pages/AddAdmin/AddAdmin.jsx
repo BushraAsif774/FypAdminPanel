@@ -4,36 +4,89 @@ import * as yup from "yup";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Navbar from "../../components/navbar/Navbar";
-import "./Addnormaluser.scss";
+import "./AddAdmin.scss";
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { textAlign } from "@mui/system";
+import {useNavigate, useParams} from "react-router-dom";
 // import Header from "../../components/Header";
 
-const Addnormaluser = () => {
+const AddAdmin = (prop) => {
+
+    const phoneRegExp =
+  /^((\[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
+
+const cnicRegExp = /^[0-9]{5}[0-9]{7}[0-9]{1}$/;
+
+const checkoutSchema = yup.object().shape({
+  firstName: yup.string().required("required"),
+  lastName: yup.string().required("required"),
+  email: yup.string().email("invalid email").required("required"),
+  phone: yup
+    .string()
+    .matches(phoneRegExp, "Phone number is not valid")
+    .required("required"),
+  password: yup.string().required("required"),
+  role: yup.string().required("required"),
+  cnic: yup
+    .string()
+    .matches(cnicRegExp, "CNIC is not valid, use without hyphens")
+    .required("required"),
+});
+let initialValues = {
+  firstName: "nmmm",
+  lastName: "",
+  cnic: "",
+  phone: "",
+  password: "",
+  email: "",
+  role:"",
+};
+
   const isNonMobile = useMediaQuery("(min-width:600px)");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  
 
-  // const handleFormSubmit = (values) => {
-  //   console.log(values);
-  //    // e.preventDefault();
-  //    axios.post("https://fyp-backend-gamma.vercel.app/driver/new-driver", values)
-  //    .then((res) => {
-  //      console.log(res.data);
+  const navigate = useNavigate();
+  const {id}= useParams();
 
-  //    })
-  //    .catch((err) => console.log(err.data));
-  // };
+  const [data, setData]=useState([]);
 
+  const getData=()=>{
+    axios.get("https://fyp-backend-gamma.vercel.app/v1/employee/get-admin")
+    .then((res)=>{
+      console.log("Data is : ", res.data[0].firstName);
+      setData(res.data[0]);
+      
+      initialValues = {
+        firstName: res.data[0].firstName,
+        lastName: "",
+        cnic: "",
+        phone: "",
+        password: "",
+        email: "",
+        role:"",
+      };
+
+    })
+    .catch((err)=>console.log(err))
+  }
+
+  useEffect(() => {
+    getData();
+
+  }, [])
+   
   const handleFormSubmit = (values) => {
+   if(prop.button==="ADD"){
+
     var data = JSON.stringify(values);
     console.log(data);
-
     var config = {
       method: "post",
       maxBodyLength: Infinity,
-      url: "https://fyp-backend-gamma.vercel.app/v1/user/new-user",
+      url: "https://fyp-backend-gamma.vercel.app/v1/employee/new-employee",
       headers: {
         "Content-Type": "application/json",
       },
@@ -43,12 +96,59 @@ const Addnormaluser = () => {
     axios(config)
       .then(function (response) {
         console.log(JSON.stringify(response.data));
+        
       })
       .catch(function (error) {
         console.log(error.response.data);
         setError(error.response.data);
       });
+   } 
+   else{
+    updateData(values,id);
+   }
   };
+
+  const updateData=(values,id)=>{
+    console.log(values, id);
+    let data = JSON.stringify(values);
+      
+      let config = {
+        method: 'put',
+        maxBodyLength: Infinity,
+        url: `https://fyp-backend-gamma.vercel.app/v1/employee/${id}`,
+        headers: { 
+          'Content-Type': 'application/json'
+        },
+        data : data
+      };
+      
+      axios.request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+      
+
+    // axios.put(`http://localhost:5000/user/${id}`, form)
+    // .then((res) => {
+    //   console.log(res.data);
+    //   navigate("/");
+    //   alert(res.data);
+      
+    // })
+    // .catch((err) => console.log(err.data));
+
+    // console.log("data: ", form);
+    // setForm({
+    //   name: "",
+    //   email: "",
+    //   contact: "",
+    // });
+
+
+  }
 
   return (
     <div className="new">
@@ -56,7 +156,8 @@ const Addnormaluser = () => {
       <div className="newContainer">
         <Navbar />
         <div className="top">
-          <h1>ADD USER</h1>
+          <h1> {prop.title} </h1>
+          
         </div>
         <div
           style={{
@@ -185,10 +286,24 @@ const Addnormaluser = () => {
                     helperText={touched.email && errors.email}
                     sx={{ gridColumn: "span 4" }}
                   />
+                  <TextField
+                    fullWidth
+                    className="inputstyle"
+                    variant="filled"
+                    type="text"
+                    label="Role"
+                    onBlur={handleBlur}
+                    onChange={handleChange}
+                    value={values.role}
+                    name="role"
+                    error={!!touched.role && !!errors.role}
+                    helperText={touched.role && errors.role}
+                    sx={{ gridColumn: "span 4" }}
+                  />
                 </Box>
                 <Box display="flex" justifyContent="end" mt="20px">
                   <Button type="submit" color="secondary" variant="contained">
-                    ADD
+                    {prop.button}
                   </Button>
                 </Box>
               </form>
@@ -200,32 +315,5 @@ const Addnormaluser = () => {
   );
 };
 
-const phoneRegExp =
-  /^((\[1-9]{1,4}[ -]?)|(\([0-9]{2,3}\)[ -]?)|([0-9]{2,4})[ -]?)*?[0-9]{3,4}[ -]?[0-9]{3,4}$/;
 
-const cnicRegExp = /^[0-9]{5}[0-9]{7}[0-9]{1}$/;
-
-const checkoutSchema = yup.object().shape({
-  firstName: yup.string().required("required"),
-  lastName: yup.string().required("required"),
-  email: yup.string().email("invalid email").required("required"),
-  phone: yup
-    .string()
-    .matches(phoneRegExp, "Phone number is not valid")
-    .required("required"),
-  password: yup.string().required("required"),
-  cnic: yup
-    .string()
-    .matches(cnicRegExp, "CNIC is not valid, use without hyphens")
-    .required("required"),
-});
-const initialValues = {
-  firstName: "",
-  lastName: "",
-  cnic: "",
-  phone: "",
-  password: "",
-  email: "",
-};
-
-export default Addnormaluser;
+export default AddAdmin;

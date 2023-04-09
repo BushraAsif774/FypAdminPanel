@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 import React, {useState, useEffect} from 'react'
 import axios from 'axios';
 
-import "./Normaluser.scss";
+import "./Admin.scss";
 
 
 function createData(name, calories, fat, carbs, protein) {
@@ -19,11 +19,11 @@ function createData(name, calories, fat, carbs, protein) {
 
 const rows = [];
 
-export default function Normaluser() {
+export default function Admin() {
   const [data, setData]=useState([]);
 
   const getData=()=>{
-    axios.get("https://fyp-backend-gamma.vercel.app/v1/user/get-user")
+    axios.get("https://fyp-backend-gamma.vercel.app/v1/employee/get-admin")
     .then((res)=>{
       console.log("Data is : ", res.data);
       setData(res.data);
@@ -38,11 +38,13 @@ export default function Normaluser() {
   }, [])
 
   const onDelete=(id)=>{
-    if (window.confirm("are you sure you want to delete that user?")){
+    if (window.confirm("Are you sure you want to delete that user?")){
 
       axios.delete(`https://fyp-backend-gamma.vercel.app/v1/employee/${id}`)
       .then((res)=>{
-        alert(res.data);
+        // console.log(data);
+        // alert(res.data);
+        // alert("User deleted Successfully")
         getData();
       })
   }
@@ -52,8 +54,8 @@ export default function Normaluser() {
   return (
     <div style={{padding:"2rem"}}>
        <div className="datatableTitle">
-        <Link to="/normaluser/newnormaluser" className="link">
-          Add New User
+        <Link to="/admin/newadmin" className="link">
+          Add New Admin
         </Link>
       </div>
     <TableContainer component={Paper}>
@@ -89,10 +91,15 @@ export default function Normaluser() {
                   {/* <Link to={`/update/${item.id}`}>
                     <button className='btn btn-edit'>Edit</button>
                   </Link> */}
+
                   
                     <button className='deleteButton' onClick={()=>{onDelete(row._id)}}>Delete</button>
+
+                    <Link to={`update/${row._id}`}>
+                        <button className='viewButton'>Edit</button>
+                    </Link>
                   
-                  <Link to={`/singledriver/${row.id}`}>
+                  <Link to={`/singledriver/${row._id}`}>
                     <button className='viewButton'>View</button>
                   </Link>
                 </TableCell>

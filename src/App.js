@@ -15,6 +15,8 @@ import Addtruck from "./pages/Addtruck/Addtruck";
 import Addnormaluser from "./pages/Addnormaluser/Addnormaluser";
 import Singledriver from "./pages/singledriver/Singledriver";
 import Singletruck from "./pages/Singletruck/Singletruck";
+import AddAdmin from "./pages/AddAdmin/AddAdmin";
+import ListAdmin from "./pages/ListAdmin/ListAdmin";
 
 function App() {
   const { darkMode } = useContext(DarkModeContext);
@@ -42,7 +44,7 @@ function App() {
                 path="newtruck"
                 element={<Addtruck inputs={productInputs} title="Add New Product" />}
               />
-              </Route>
+            </Route>
                {/* <Route path="admin">
               <Route index element={<Listdriver/>} />
               <Route path="singledriver/:id" element={<Singledriver />} />
@@ -51,14 +53,31 @@ function App() {
                 element={<New inputs={userInputs} title="Add New User" />}
               /> */}
               {/* <Route path="/normaluser" element={<Normaluser/>} ></Route> */}
-               <Route path="normaluser">
-              <Route index element={ <Listnormaluser/> } />
-               {/* <Route path="singledriver/:id" element={<Singledriver />} /> */}
-              <Route
+
+              <Route path="normaluser">
+                <Route index element={ <Listnormaluser/> } />
+                {/* <Route path="singledriver/:id" element={<Singledriver />} /> */}
+                <Route
                 path="newnormaluser"
                 element={<Addnormaluser title="Add New Normal User" />}
-              /> 
+                /> 
               </Route>
+
+              <Route path="admin">
+                <Route index element={ <ListAdmin/> } />              
+                <Route
+                path="newadmin"
+                element={<AddAdmin title="Add New Admin" button="ADD" />}
+                /> 
+
+                 <Route
+                  path="update/:id"
+                  element={<AddAdmin title="Edit Admin" button="UPDATE" />}
+                  /> 
+               
+              
+              </Route>
+              
             
           </Route>
         </Routes>

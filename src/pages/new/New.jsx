@@ -33,7 +33,7 @@ const New = () => {
     var config = {
       method: 'post',
     maxBodyLength: Infinity,
-      url: 'https://fyp-backend-gamma.vercel.app/v1/driver/new-driver',
+      url: 'https://fyp-backend-gamma.vercel.app/v1/employee/new-driver',
       headers: { 
         'Content-Type': 'application/json'
       },
